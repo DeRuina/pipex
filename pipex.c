@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 14:04:34 by druina            #+#    #+#             */
-/*   Updated: 2023/01/13 11:07:49 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/13 11:13:21 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int	main(int argc, char **argv /*, char **env*/)
 				}
 				j++;
 			}
+
 
 			return(EXIT_SUCCESS);
 		}

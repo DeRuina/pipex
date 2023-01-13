@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 14:04:41 by druina            #+#    #+#             */
-/*   Updated: 2023/01/13 15:50:15 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/13 18:10:24 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # include <unistd.h>
 
 void error(char *msg);
-int	childzero(char **argv, int **pipe_n);
+int	childzero(char **argv, int *pipe_n);
+int middlechild(int pipe_n[][2], int i);
+int endchild(int *pipe_n);
 
 #endif

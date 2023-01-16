@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 14:04:34 by druina            #+#    #+#             */
-/*   Updated: 2023/01/16 11:34:46 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/16 16:10:23 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,12 @@ int	endchild(int pipe_n[][2], int i, int processes)
 	int	y;
 	int	j;
 
+	i = 0;
 	j = 0;
-	while (j < processes - 1)
+	while (j < (processes - 1))
 	{
-		close(pipe_n[j][1]);
-		if (j + 1 != i)
+		 close(pipe_n[j][1]);
+		if (j != processes - 2)
 			close(pipe_n[j][0]);
 		j++;
 	}
@@ -113,8 +114,8 @@ int	main(int argc, char **argv /*, char **env*/)
 	i = 0;
 	while (i < PROCESS_NUMBER)
 	{
-		pid[i] = fork();
 		ft_printf("created process number: %d\n", i);
+		pid[i] = fork();
 		if (pid[i] == -1)
 			error("woah, fork problem");
 		if (pid[i] == 0)
@@ -136,8 +137,12 @@ int	main(int argc, char **argv /*, char **env*/)
 		close(pipe_n[j][1]);
 		j++;
 	}
-	i = 0;
+	i = -1;
 	while (i++ < PROCESS_NUMBER)
-		wait(NULL);
+	{
+		if (waitpid(pid[i], NULL, 0) == -1)
+			error("PROBLEM WITH WAIT IS :");
+
+	}
 	return (EXIT_SUCCESS);
 }

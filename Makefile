@@ -6,7 +6,7 @@
 #    By: druina <druina@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/12 14:04:44 by druina            #+#    #+#              #
-#    Updated: 2023/01/12 14:17:08 by druina           ###   ########.fr        #
+#    Updated: 2023/01/16 10:06:17 by druina           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ all: $(NAME)
 $(NAME): $(SRC)
 	cd libft && make
 	cd libft && mv libft.a ..
-	cc $(FLAGS) -o $(NAME) $(SRC) libft.a -I $(HEADER)
+	cc $(FLAGS) -o $(NAME) $(SRC) libft.a -I $(HEADER) -g
 
 
 

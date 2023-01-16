@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 14:04:34 by druina            #+#    #+#             */
-/*   Updated: 2023/01/16 11:15:16 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/16 11:34:46 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,41 @@ void	error(char *msg)
 	exit(EXIT_FAILURE);
 }
 
-int	endchild(int *pipe_n)
+int	endchild(int pipe_n[][2], int i, int processes)
 {
 	int	y;
+	int	j;
 
+	j = 0;
+	while (j < processes - 1)
+	{
+		close(pipe_n[j][1]);
+		if (j + 1 != i)
+			close(pipe_n[j][0]);
+		j++;
+	}
 	ft_printf("Entered endchild\n");
-	if (read(pipe_n[0], &y, sizeof(int)) == -1)
+	if (read(pipe_n[processes - 2][0], &y, sizeof(int)) == -1)
 		error("woah, file reading problem - END CHILD");
-	close(pipe_n[0]);
+	close(pipe_n[processes - 2][0]);
 	ft_printf("THE TOTAL SUM IS %d\n", y);
 	return (EXIT_SUCCESS);
 }
 
-int	middlechild(int pipe_n[][2], int i)
+int	middlechild(int pipe_n[][2], int i, int processes)
 {
 	int	x;
+	int	j;
 
+	j = 0;
+	while (j < processes - 1)
+	{
+		if (j != i)
+			close(pipe_n[j][1]);
+		if (j + 1 != i)
+			close(pipe_n[j][0]);
+		j++;
+	}
 	ft_printf("Entered middlechild\n");
 	if (read(pipe_n[i - 1][0], &x, sizeof(int)) == -1)
 		error("woah, file reading problem - MIDDLE CHILD");
@@ -48,20 +67,29 @@ int	middlechild(int pipe_n[][2], int i)
 	return (EXIT_SUCCESS);
 }
 
-int	childzero(char **argv, int *pipe_n)
+int	childzero(char **argv, int pipe_n[][2], int i, int processes)
 {
 	int	fd;
 	int	x;
+	int	j;
 
+	j = 0;
 	x = 10;
+	while (j < processes - 1)
+	{
+		close(pipe_n[j][0]);
+		if (j != i)
+			close(pipe_n[j][1]);
+		j++;
+	}
 	ft_printf("Entered child zero\n");
 	if ((fd = open(argv[1], O_RDONLY)) == -1)
 		error("woah, file opening problem");
 	ft_printf("read child zero");
-	if (write(pipe_n[1], &x, sizeof(int)) == -1)
+	if (write(pipe_n[0][1], &x, sizeof(int)) == -1)
 		error("woah, file writing problem - CHILD ZERO");
 	ft_printf("ORIGINAL FD IS %d\n", x);
-	close(pipe_n[1]);
+	close(pipe_n[0][1]);
 	return (EXIT_SUCCESS);
 }
 
@@ -92,39 +120,12 @@ int	main(int argc, char **argv /*, char **env*/)
 		if (pid[i] == 0)
 		{
 			ft_printf("entered process: %d\n", i);
-			// while (j < PROCESS_NUMBER - 1)
-			// {
-			// 	if (pid[i] == pid[0])
-			// 	{
-			// 		close(pipe_n[j][0]);
-			// 		if (j != i)
-			// 			close(pipe_n[j][1]);
-
-			// 	}
-			// 	else if (pid[i] == pid[PROCESS_NUMBER - 1])
-			// 	{
-
-			// 		// close(pipe_n[j][1]);
-			// 		// if (j + 1 != i)
-			// 		// 	close(pipe_n[j][0]);
-			// 	}
-			// 	//  else
-			// 	// {
-			// 	// 	ft_printf("this is middle child %d, %d times\n", pid[i], j);
-			// 	// // 	if (j != i)
-			// 	// // 		close(pipe_n[j][1]);
-			// 	// // 	if (j + 1 != i)
-			// 	// // 		close(pipe_n[j][0]);
-			// 	//  }
-			// 	j++;
-			// }
-
 			if (pid[i] == pid[0])
-				return (childzero(argv, pipe_n[0]));
+				return (childzero(argv, pipe_n, i, PROCESS_NUMBER));
 			else if (pid[i] == pid[PROCESS_NUMBER - 1])
-				return (endchild(pipe_n[PROCESS_NUMBER - 2]));
+				return (endchild(pipe_n, i, PROCESS_NUMBER));
 			else
-				return (middlechild(pipe_n, i));
+				return (middlechild(pipe_n, i, PROCESS_NUMBER));
 		}
 		i++;
 	}

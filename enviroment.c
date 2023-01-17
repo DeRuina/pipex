@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 10:33:00 by druina            #+#    #+#             */
-/*   Updated: 2023/01/17 15:44:38 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/17 15:50:40 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char *get_path_and_cmd(char **argv, char **envp)
 			cmd = ft_strjoin(cmd, my_execve_args[0]);
 			ft_printf("%s\n", cmd);
 			if (access(cmd, X_OK | F_OK) == 0)
-				ft_printf(" YES I FOUND IT in %s\n", cmd);
+				execve(cmd, my_execve_args, envp);
 			else
 				free(cmd);
 			possible_paths++;

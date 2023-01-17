@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 14:04:41 by druina            #+#    #+#             */
-/*   Updated: 2023/01/17 10:05:31 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/17 10:18:39 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,6 @@
 
 void error(char *msg);
 int	child(int pipe_n[][2], int i, int processes);
+int parent(int pipe_n[][2], char **argv, int proccesses);
 
 #endif

@@ -6,13 +6,13 @@
 #    By: druina <druina@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/12 14:04:44 by druina            #+#    #+#              #
-#    Updated: 2023/01/16 10:06:17 by druina           ###   ########.fr        #
+#    Updated: 2023/01/17 10:38:01 by druina           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
 
-SRC = pipex.c
+SRC = pipex.c processes.c
 
 FLAGS = -Wall -Wextra -Werror
 

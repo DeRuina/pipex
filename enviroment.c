@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 10:33:00 by druina            #+#    #+#             */
-/*   Updated: 2023/01/17 15:50:40 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/18 11:01:20 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,53 +24,77 @@ char	*get_path_from_env(char **envp)
 	return (NULL);
 }
 
-char *get_path_and_cmd(char **argv, char **envp)
+char	**possible_paths(char **envp)
 {
-	int i;
-	char *path;
-	char **possible_paths;
-	char **my_execve_args;
-	char *cmd;
-	char **temp;
+	char	*path;
+	char	**possible_paths;
+	char	**temp;
 
-	i = 0;
-	path =  get_path_from_env(envp);
+	path = get_path_from_env(envp);
 	possible_paths = ft_split(path, ':');
+	if (!possible_paths)
+		return (NULL);
 	temp = possible_paths;
+	while (*possible_paths)
+	{
+		*possible_paths = ft_strjoin(*possible_paths, "/");
+		if (!*possible_paths)
+		{
+			free(possible_paths);
+			return (NULL);
+		}
+		possible_paths++;
+	}
+	return (temp);
+}
+
+char	*get_path_and_cmd(char **argv, char **envp)
+{
+	char	**paths;
+	char	**my_execve_args;
+	char	*cmd;
+	char	**temp;
+
+	paths = possible_paths(envp);
+	temp = paths;
 	while (*argv)
 	{
 		my_execve_args = ft_split(*argv, ' ');
-		while(*possible_paths)
+		while (*paths)
 		{
-			cmd = ft_strjoin(*possible_paths, "/");
-			cmd = ft_strjoin(cmd, my_execve_args[0]);
+			cmd = ft_strjoin(*paths, my_execve_args[0]);
+			if (!cmd)
+				return (NULL);
 			ft_printf("%s\n", cmd);
 			if (access(cmd, X_OK | F_OK) == 0)
-				execve(cmd, my_execve_args, envp);
+			{
+				if (execve(cmd, my_execve_args, envp) == -1)
+					perror("execve problem");
+			}
 			else
 				free(cmd);
-			possible_paths++;
+			paths++;
 		}
-		possible_paths = temp;
+		paths = temp;
 		argv++;
 	}
 	return (cmd);
 }
 
-
 int	main(int argc, char **argv, char **envp)
 {
-	char *path;
-	char **paths;
+	char	*path;
+	char	**paths;
+
 	argc = 0;
-	path =  get_path_from_env(envp);
+	path = get_path_from_env(envp);
 	ft_printf("%s\n", path);
-	paths = ft_split(path, ':');
-	while(*paths)
+	paths = possible_paths(envp);
+	while (*paths)
 	{
 		printf("%s\n", *paths);
 		paths++;
 	}
-	ft_printf("%s\n", get_path_and_cmd(argv, envp));
+	get_path_and_cmd(argv, envp);
 	return (0);
 }

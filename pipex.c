@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 09:03:21 by druina            #+#    #+#             */
-/*   Updated: 2023/01/19 15:40:36 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/19 16:00:18 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@ int	main(int argc, char **argv, char **envp)
 	int	pid[PROCESS_NUMBER - 1];
 	int	infile;
 	int j;
-	//int outfile;
+
+	if (argc < 5)
+		return (ft_printf("not enough arguments try again\n"));
 	i = 0;
 	ft_printf("pipes number: %d\n", PROCESS_NUMBER);
 	while (i < PROCESS_NUMBER)
@@ -44,9 +46,6 @@ int	main(int argc, char **argv, char **envp)
 		exit(error("woah, dup2 main problem"));
 	close(infile);
 	}
-	// // if ((outfile = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC,
-	// 				0664)) == -1)
-	// // 	return (error("woah, file opening problem"));
 	i = 0;
 	while (i < PROCESS_NUMBER - 1)
 	{

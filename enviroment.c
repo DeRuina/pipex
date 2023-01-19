@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 10:33:00 by druina            #+#    #+#             */
-/*   Updated: 2023/01/19 15:44:45 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/19 15:50:40 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,13 @@ char	*get_path_and_cmd(char *argv, char **envp)
 		}
 		// ft_printf("%s\n", cmd);
 		if (access(cmd, X_OK | F_OK) == 0)
-		{
-			if (execve(cmd, my_execve_args, envp) == -1)
-				perror("execve problem");
-		}
+			break;
 		else
 			free(cmd);
 		paths++;
 	}
+	if (execve(cmd, my_execve_args, envp) == -1)
+		perror("execve problem");
 	return (cmd);
 }
 

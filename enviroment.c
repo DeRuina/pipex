@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 10:33:00 by druina            #+#    #+#             */
-/*   Updated: 2023/01/19 08:27:31 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/19 14:57:45 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,53 +48,50 @@ char	**possible_paths(char **envp)
 	return (temp);
 }
 
-char	*get_path_and_cmd(char **argv, char **envp)
+char	*get_path_and_cmd(char *argv, char **envp)
 {
 	char	**paths;
 	char	**my_execve_args;
 	char	*cmd;
-	char	**temp;
 
 	paths = possible_paths(envp);
-	temp = paths;
-	while (*argv)
+	my_execve_args = ft_split(argv, ' ');
+	while (*paths)
 	{
-		my_execve_args = ft_split(*argv, ' ');
-		while (*paths)
+		cmd = ft_strjoin(*paths, my_execve_args[0]);
+		if (!cmd)
+			return (NULL);
+		// ft_printf("%s\n", cmd);
+		if (access(cmd, X_OK | F_OK) == 0)
 		{
-			cmd = ft_strjoin(*paths, my_execve_args[0]);
-			if (!cmd)
-				return (NULL);
-			ft_printf("%s\n", cmd);
-			if (access(cmd, X_OK | F_OK) == 0)
-			{
-				if (execve(cmd, my_execve_args, envp) == -1)
-					perror("execve problem");
-			}
-			else
-				free(cmd);
-			paths++;
+			if (execve(cmd, my_execve_args, envp) == -1)
+				perror("execve problem");
 		}
-		paths = temp;
-		argv++;
+		else
+			free(cmd);
+		paths++;
 	}
 	return (cmd);
 }
 
-int	main(int argc, char **argv, char **envp)
-{
-	char	*path;
-	char	**paths;
+// int	main(int argc, char **argv, char **envp)
+// {
+// 	char	*path;
+// 	char	**paths;
 
-	argc = 0;
-	path = get_path_from_env(envp);
-	ft_printf("%s\n", path);
-	paths = possible_paths(envp);
-	while (*paths)
-	{
-		printf("%s\n", *paths);
-		paths++;
-	}
-	get_path_and_cmd(argv, envp);
-	return (0);
-}
+// 	argc = 0;
+// 	path = get_path_from_env(envp);
+// 	ft_printf("%s\n", path);
+// 	paths = possible_paths(envp);
+// 	while (*paths)
+// 	{
+// 		printf("%s\n", *paths);
+// 		paths++;
+// 	}
+// 	while (*argv)
+// 	{
+// 		printf("%s\n", get_path_and_cmd(*argv, envp));
+// 		argv++;
+// 	}
+// 	return (0);
+// }

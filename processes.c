@@ -6,72 +6,101 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 10:28:59 by druina            #+#    #+#             */
-/*   Updated: 2023/01/19 08:26:35 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/19 14:56:07 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	parent(int pipe_n[][2], char **argv, int proccesses)
+int	parent(int pipe_n[][2], char **argv, int proccesses, char **envp)
 {
 	int	i;
-	int	fd;
-	int	x;
+	int outfile;
+	char **temp;
 
-	x = 10;
 	i = 0;
-	while (i < proccesses + 1)
+	while (i < proccesses)
 	{
-		if (i != proccesses)
+		close(pipe_n[i][1]);
+		if (i != proccesses - 1)
 			close(pipe_n[i][0]);
-		if (i != 0)
-			close(pipe_n[i][1]);
 		i++;
 	}
-	if ((fd = open(argv[1], O_RDONLY)) == -1)
-		return (error("woah, file opening problem"));
-	ft_printf("read file\n");
-	close(fd);
-	if (write(pipe_n[0][1], &x, sizeof(int)) == -1)
-		return (error("woah, file writing problem - CHILD ZERO"));
-	ft_printf("ORIGINAL X IS %d\n", x);
-	close(pipe_n[0][1]);
-	if (read(pipe_n[proccesses][0], &x, sizeof(int)) == -1)
-		return (error("woah, file reading problem - END CHILD"));
-	close(pipe_n[proccesses][0]);
-	ft_printf("THE TOTAL SUM IS %d\n", x);
+	if (dup2(pipe_n[proccesses - 1][0], STDIN_FILENO) == -1)
+		return(error("woah, dup2 parent 1 problem"));
+	close(pipe_n[proccesses - 1][0]);
 	i = 0;
-	while (i++ < proccesses)
+	while (i++ < proccesses - 1)
 	{
 		if (waitpid(-1, NULL, 0) == -1)
-			return (error("PROBLEM WITH WAIT IS :"));
+			return (error("PROBLEM WITH WAIT IS"));
 	}
+	i = 0;
+	temp = argv;
+	while(*temp)
+	{
+		i++;
+		temp++;
+	}
+	if ((outfile = open(argv[i - 1], O_CREAT | O_WRONLY | O_TRUNC, 0664)) == -1)
+		return (error("woah, file opening problem"));
+	if (dup2(outfile, STDOUT_FILENO) == -1)
+		return(error("woah, dup2 parent 2 problem"));
+	close(outfile);
+	get_path_and_cmd(argv[i - 2], envp);
+
+	// if ((fd = open(argv[1], O_RDONLY)) == -1)
+	// 	return (error("woah, file opening problem"));
+	// ft_printf("read file %d\n", fd);
+	// dup2(fd, STDIN_FILENO);
+	// close(fd);
+
+	// if (write(pipe_n[0][1], &x, sizeof(int)) == -1)
+	// 	return (error("woah, file writing problem - CHILD ZERO"));
+	// ft_printf("ORIGINAL X IS %d\n", x);
+	// close(pipe_n[0][1]);
+	// if (read(pipe_n[proccesses][0], &x, sizeof(int)) == -1)
+	// 	return (error("woah, file reading problem - END CHILD"));
+	// close(pipe_n[proccesses][0]);
+	// ft_printf("THE TOTAL SUM IS %d\n", x);
+	// i = 0;
+	// while (i++ < proccesses)
+	// {
+	// 	if (waitpid(-1, NULL, 0) == -1)
+	// 		return (error("PROBLEM WITH WAIT IS :"));
+	// }
 	return (EXIT_SUCCESS);
 }
 
-int	child(int pipe_n[][2], int i, int processes)
+int	child(int pipe_n[][2], int i, char **argv, char **envp)
 {
-	int	x;
-	int	j;
+	// int	j;
 
-	j = 0;
-	while (j < processes + 1)
-	{
-		if (i != j)
-			close(pipe_n[j][0]);
-		if (i + 1 != j)
-			close(pipe_n[j][1]);
-		j++;
-	}
+	// j = 0;
+	// while (j < processes + 1)
+	// {
+	// 	if (i != j)
+	// 		close(pipe_n[j][0]);
+	// 	if (i + 1 != j)
+	// 		close(pipe_n[j][1]);
+	// 	j++;
+	// }
 	ft_printf("Entered middlechild\n");
-	if (read(pipe_n[i][0], &x, sizeof(int)) == -1)
-		return (error("woah, file reading problem - MIDDLE CHILD"));
-	ft_printf("RECIEVED %d\n", x);
-	x++;
-	if (write(pipe_n[i + 1][1], &x, sizeof(int)) == -1)
-		return (error("woah, file writing problem - MIDDLE CHILD"));
+	if (dup2(pipe_n[i][0], STDIN_FILENO) == -1)
+		return(error("woah, dup2 child 1 problem"));
 	close(pipe_n[i][0]);
-	close(pipe_n[i + 1][1]);
-	ft_printf("WROTE %d\n", x);
+	if (dup2(pipe_n[i + 1][1], STDOUT_FILENO) == -1)
+		return(error("woah, dup2 child 2 problem"));
+	close (pipe_n[i + 1][1]);
+	get_path_and_cmd(argv[i + 2], envp);
+	// if (read(pipe_n[i][0], &x, sizeof(int)) == -1)
+	// 	return (error("woah, file reading problem - MIDDLE CHILD"));
+	// ft_printf("RECIEVED %d\n", x);
+	// x++;
+	// if (write(pipe_n[i + 1][1], &x, sizeof(int)) == -1)
+	// 	return (error("woah, file writing problem - MIDDLE CHILD"));
+	// close(pipe_n[i][0]);
+	// close(pipe_n[i + 1][1]);
+	// ft_printf("WROTE %d\n", x);
 	return (EXIT_SUCCESS);
 }

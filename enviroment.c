@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 10:33:00 by druina            #+#    #+#             */
-/*   Updated: 2023/01/19 15:50:40 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/19 16:17:45 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,8 @@ char	*get_path_and_cmd(char *argv, char **envp)
 			if (!cmd)
 				return (NULL);
 		}
-		// ft_printf("%s\n", cmd);
 		if (access(cmd, X_OK | F_OK) == 0)
-			break;
+			break ;
 		else
 			free(cmd);
 		paths++;
@@ -77,25 +76,3 @@ char	*get_path_and_cmd(char *argv, char **envp)
 		perror("execve problem");
 	return (cmd);
 }
-
-// int	main(int argc, char **argv, char **envp)
-// {
-// 	char	*path;
-// 	char	**paths;
-
-// 	argc = 0;
-// 	path = get_path_from_env(envp);
-// 	ft_printf("%s\n", path);
-// 	paths = possible_paths(envp);
-// 	while (*paths)
-// 	{
-// 		printf("%s\n", *paths);
-// 		paths++;
-// 	}
-// 	while (*argv)
-// 	{
-// 		printf("%s\n", get_path_and_cmd(*argv, envp));
-// 		argv++;
-// 	}
-// 	return (0);
-// }

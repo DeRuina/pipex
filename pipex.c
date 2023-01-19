@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 09:03:21 by druina            #+#    #+#             */
-/*   Updated: 2023/01/19 16:00:18 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/19 16:16:50 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,31 +25,28 @@ int	main(int argc, char **argv, char **envp)
 	int	i;
 	int	pid[PROCESS_NUMBER - 1];
 	int	infile;
-	int j;
+	int	j;
 
 	if (argc < 5)
 		return (ft_printf("not enough arguments try again\n"));
 	i = 0;
-	ft_printf("pipes number: %d\n", PROCESS_NUMBER);
 	while (i < PROCESS_NUMBER)
 	{
 		if (pipe(pipe_n[i]) == -1)
 			exit(error("woah, pipe problem"));
-		ft_printf("created pipe number: %d\n", i);
 		i++;
 	}
 	if ((infile = open(argv[1], O_RDONLY)) == -1)
 		perror("woah, file opening problem");
 	else
 	{
-	if (dup2(infile, pipe_n[0][0]) == -1)
-		exit(error("woah, dup2 main problem"));
-	close(infile);
+		if (dup2(infile, pipe_n[0][0]) == -1)
+			exit(error("woah, dup2 main problem"));
+		close(infile);
 	}
 	i = 0;
 	while (i < PROCESS_NUMBER - 1)
 	{
-		ft_printf("created process number: %d\n", i);
 		pid[i] = fork();
 		if (pid[i] == -1)
 			exit(error("woah, fork problem"));
@@ -64,7 +61,6 @@ int	main(int argc, char **argv, char **envp)
 					close(pipe_n[j][1]);
 				j++;
 			}
-			ft_printf("entered process: %d\n", i);
 			return (child(pipe_n, i, argv, envp));
 		}
 		i++;

@@ -6,17 +6,17 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 09:03:21 by druina            #+#    #+#             */
-/*   Updated: 2023/01/18 09:22:15 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/19 08:23:54 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 #define PROCESS_NUMBER argc - 3
 
-void	error(char *msg)
+int	error(char *msg)
 {
 	perror(msg);
-	exit(EXIT_FAILURE);
+	return (EXIT_FAILURE);
 }
 
 int	main(int argc, char **argv /*, char **env*/)
@@ -30,7 +30,7 @@ int	main(int argc, char **argv /*, char **env*/)
 	while (i < PROCESS_NUMBER + 1)
 	{
 		if (pipe(pipe_n[i]) == -1)
-			error("woah, pipe problem");
+			return (error("woah, pipe problem"));
 		ft_printf("created pipe number: %d\n", i);
 		i++;
 	}
@@ -40,7 +40,7 @@ int	main(int argc, char **argv /*, char **env*/)
 		ft_printf("created process number: %d\n", i);
 		pid[i] = fork();
 		if (pid[i] == -1)
-			error("woah, fork problem");
+			return (error("woah, fork problem"));
 		if (pid[i] == 0)
 		{
 			ft_printf("entered process: %d\n", i);

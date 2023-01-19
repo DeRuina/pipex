@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 10:33:00 by druina            #+#    #+#             */
-/*   Updated: 2023/01/19 14:57:45 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/19 15:44:45 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,14 @@ char	*get_path_and_cmd(char *argv, char **envp)
 	my_execve_args = ft_split(argv, ' ');
 	while (*paths)
 	{
-		cmd = ft_strjoin(*paths, my_execve_args[0]);
-		if (!cmd)
-			return (NULL);
+		if (access(my_execve_args[0], X_OK | F_OK) == 0)
+			cmd = my_execve_args[0];
+		else
+		{
+			cmd = ft_strjoin(*paths, my_execve_args[0]);
+			if (!cmd)
+				return (NULL);
+		}
 		// ft_printf("%s\n", cmd);
 		if (access(cmd, X_OK | F_OK) == 0)
 		{

@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 09:03:21 by druina            #+#    #+#             */
-/*   Updated: 2023/01/19 14:50:49 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/19 15:40:36 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,13 @@ int	main(int argc, char **argv, char **envp)
 		i++;
 	}
 	if ((infile = open(argv[1], O_RDONLY)) == -1)
-		exit(error("woah, file opening problem"));
-	ft_printf("opened infile %d\n", infile);
+		perror("woah, file opening problem");
+	else
+	{
 	if (dup2(infile, pipe_n[0][0]) == -1)
 		exit(error("woah, dup2 main problem"));
 	close(infile);
+	}
 	// // if ((outfile = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC,
 	// 				0664)) == -1)
 	// // 	return (error("woah, file opening problem"));

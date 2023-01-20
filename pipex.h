@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 14:04:41 by druina            #+#    #+#             */
-/*   Updated: 2023/01/19 16:16:54 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/20 09:54:50 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,14 @@
 # include <unistd.h>
 
 int		error(char *msg);
-int		child(int pipe_n[][2], int i, char **argv, char **envp);
-int		parent(int pipe_n[][2], char **argv, int proccesses, char **envp);
+int		child(int **pipe_n, int i, char **argv, char **envp);
+int		parent(int **pipe_n, char **argv, int proccesses, char **envp);
 char	*get_path_from_env(char **envp);
 char	**possible_paths(char **envp);
 char	*get_path_and_cmd(char *argv, char **envp);
+void	close_parent_pipes(int **pipe_n, int proccesses);
+void	close_child_pipes(int **pipe_n, int i, int proccesses);
+int		*allocate_pid(int argc, int **pipe_n);
+int		**allocate_pipes(int argc);
 
 #endif

@@ -6,17 +6,15 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 10:28:59 by druina            #+#    #+#             */
-/*   Updated: 2023/01/19 16:19:08 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/20 09:40:04 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	parent(int pipe_n[][2], char **argv, int proccesses, char **envp)
+void	close_parent_pipes(int **pipe_n, int proccesses)
 {
-	int		i;
-	int		outfile;
-	char	**temp;
+	int	i;
 
 	i = 0;
 	while (i < proccesses)
@@ -26,6 +24,14 @@ int	parent(int pipe_n[][2], char **argv, int proccesses, char **envp)
 			close(pipe_n[i][0]);
 		i++;
 	}
+}
+
+int	parent(int **pipe_n, char **argv, int proccesses, char **envp)
+{
+	int	i;
+	int	outfile;
+
+	close_parent_pipes(pipe_n, proccesses);
 	if (dup2(pipe_n[proccesses - 1][0], STDIN_FILENO) == -1)
 		return (error("woah, dup2 parent 1 problem"));
 	close(pipe_n[proccesses - 1][0]);
@@ -35,23 +41,17 @@ int	parent(int pipe_n[][2], char **argv, int proccesses, char **envp)
 		if (waitpid(-1, NULL, 0) == -1)
 			return (error("PROBLEM WITH WAIT IS"));
 	}
-	i = 0;
-	temp = argv;
-	while (*temp)
-	{
-		i++;
-		temp++;
-	}
-	if ((outfile = open(argv[i - 1], O_CREAT | O_WRONLY | O_TRUNC, 0664)) == -1)
+	outfile = open(argv[proccesses + 2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
+	if (outfile == -1)
 		return (error("woah, file opening problem"));
 	if (dup2(outfile, STDOUT_FILENO) == -1)
 		return (error("woah, dup2 parent 2 problem"));
 	close(outfile);
-	get_path_and_cmd(argv[i - 2], envp);
+	get_path_and_cmd(argv[proccesses + 1], envp);
 	return (EXIT_SUCCESS);
 }
 
-int	child(int pipe_n[][2], int i, char **argv, char **envp)
+int	child(int **pipe_n, int i, char **argv, char **envp)
 {
 	if (dup2(pipe_n[i][0], STDIN_FILENO) == -1)
 		return (error("woah, dup2 child 1 problem"));

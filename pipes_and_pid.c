@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 09:48:17 by druina            #+#    #+#             */
-/*   Updated: 2023/01/20 09:48:53 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/20 11:02:18 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,27 @@ int	*allocate_pid(int argc, int **pipe_n)
 		return (NULL);
 	}
 	return (pid);
+}
+
+void	create_pipes_and_read_infile(int **pipe_n, int proccesses, char **argv)
+{
+	int	i;
+	int	infile;
+
+	i = 0;
+	while (i < proccesses)
+	{
+		if (pipe(pipe_n[i]) == -1)
+			exit(error("woah, pipe problem"));
+		i++;
+	}
+	infile = open(argv[1], O_RDONLY);
+	if (infile == -1)
+		perror("woah, file opening problem");
+	else
+	{
+		if (dup2(infile, pipe_n[0][0]) == -1)
+			exit(error("woah, dup2 main problem"));
+		close(infile);
+	}
 }

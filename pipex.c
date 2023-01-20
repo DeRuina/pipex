@@ -6,26 +6,11 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 09:03:21 by druina            #+#    #+#             */
-/*   Updated: 2023/01/20 09:57:55 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/20 11:03:57 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-void	close_child_pipes(int **pipe_n, int i, int proccesses)
-{
-	int	j;
-
-	j = 0;
-	while (j < proccesses)
-	{
-		if (i != j)
-			close(pipe_n[j][0]);
-		if (i + 1 != j)
-			close(pipe_n[j][1]);
-		j++;
-	}
-}
 
 int	error(char *msg)
 {
@@ -33,12 +18,19 @@ int	error(char *msg)
 	return (EXIT_FAILURE);
 }
 
+int	fork_and_check(int *pid, int i)
+{
+	pid[i] = fork();
+	if (pid[i] == -1)
+		return (error("woah, fork problem"));
+	return (EXIT_SUCCESS);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	int	**pipe_n;
 	int	i;
 	int	*pid;
-	int	infile;
 	int	proccesses;
 
 	if (argc < 5)
@@ -48,34 +40,17 @@ int	main(int argc, char **argv, char **envp)
 	if (pipe_n == NULL || pid == NULL)
 		exit(error("allocation fail"));
 	proccesses = argc - 3;
-	i = 0;
-	while (i < proccesses)
+	create_pipes_and_read_infile(pipe_n, proccesses, argv);
+	i = -1;
+	while (++i < proccesses - 1)
 	{
-		if (pipe(pipe_n[i]) == -1)
-			exit(error("woah, pipe problem"));
-		i++;
-	}
-	infile = open(argv[1], O_RDONLY);
-	if (infile == -1)
-		perror("woah, file opening problem");
-	else
-	{
-		if (dup2(infile, pipe_n[0][0]) == -1)
-			exit(error("woah, dup2 main problem"));
-		close(infile);
-	}
-	i = 0;
-	while (i < proccesses - 1)
-	{
-		pid[i] = fork();
-		if (pid[i] == -1)
-			exit(error("woah, fork problem"));
+		if (fork_and_check(pid, i) == -1)
+			return (error("woah, fork problem"));
 		if (pid[i] == 0)
 		{
 			close_child_pipes(pipe_n, i, proccesses);
 			return (child(pipe_n, i, argv, envp));
 		}
-		i++;
 	}
 	return (parent(pipe_n, argv, proccesses, envp));
 }

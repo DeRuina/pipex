@@ -6,13 +6,13 @@
 #    By: druina <druina@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/12 14:04:44 by druina            #+#    #+#              #
-#    Updated: 2023/01/20 09:49:30 by druina           ###   ########.fr        #
+#    Updated: 2023/01/20 11:03:19 by druina           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
 
-SRC = pipex.c processes.c enviroment.c allocate_pipe_and_pid.c
+SRC = pipex.c processes.c enviroment.c pipes_and_pid.c
 
 FLAGS = -Wall -Wextra -Werror
 

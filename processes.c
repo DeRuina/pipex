@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 10:28:59 by druina            #+#    #+#             */
-/*   Updated: 2023/01/20 09:40:04 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/20 11:00:39 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,21 @@ void	close_parent_pipes(int **pipe_n, int proccesses)
 		if (i != proccesses - 1)
 			close(pipe_n[i][0]);
 		i++;
+	}
+}
+
+void	close_child_pipes(int **pipe_n, int i, int proccesses)
+{
+	int	j;
+
+	j = 0;
+	while (j < proccesses)
+	{
+		if (i != j)
+			close(pipe_n[j][0]);
+		if (i + 1 != j)
+			close(pipe_n[j][1]);
+		j++;
 	}
 }
 

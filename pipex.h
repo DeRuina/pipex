@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 14:04:41 by druina            #+#    #+#             */
-/*   Updated: 2023/01/20 09:54:50 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/20 11:01:37 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,7 @@ void	close_parent_pipes(int **pipe_n, int proccesses);
 void	close_child_pipes(int **pipe_n, int i, int proccesses);
 int		*allocate_pid(int argc, int **pipe_n);
 int		**allocate_pipes(int argc);
+void	create_pipes_and_read_infile(int **pipe_n, int proccesses, char **argv);
+int		fork_and_check(int *pid, int i);
 
 #endif

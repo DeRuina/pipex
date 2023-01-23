@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 10:33:00 by druina            #+#    #+#             */
-/*   Updated: 2023/01/19 16:17:45 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/20 14:26:14 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,11 @@ char	**possible_paths(char **envp)
 		*possible_paths = ft_strjoin(*possible_paths, "/");
 		if (!*possible_paths)
 		{
-			free(possible_paths);
+			while (*temp)
+			{
+				free(*temp);
+				temp++;
+			}
 			return (NULL);
 		}
 		possible_paths++;

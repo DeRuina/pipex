@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 10:33:00 by druina            #+#    #+#             */
-/*   Updated: 2023/01/20 14:26:14 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/23 14:02:16 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,28 +28,39 @@ char	**possible_paths(char **envp)
 {
 	char	*path;
 	char	**possible_paths;
-	char	**temp;
 
 	path = get_path_from_env(envp);
 	possible_paths = ft_split(path, ':');
 	if (!possible_paths)
 		return (NULL);
-	temp = possible_paths;
-	while (*possible_paths)
+	return (possible_paths);
+}
+
+void	free_2d(char **str)
+{
+	char	**temp;
+
+	temp = str;
+	while (*str)
 	{
-		*possible_paths = ft_strjoin(*possible_paths, "/");
-		if (!*possible_paths)
-		{
-			while (*temp)
-			{
-				free(*temp);
-				temp++;
-			}
-			return (NULL);
-		}
-		possible_paths++;
+		free(*str);
+		str++;
 	}
-	return (temp);
+	free(temp);
+}
+
+char	*join_and_free(char *path, char *arg)
+{
+	char	*addslash;
+	char	*cmd;
+
+	addslash = ft_strjoin(path, "/");
+	free(path);
+	cmd = ft_strjoin(addslash, arg);
+	free(addslash);
+	if (!cmd)
+		return (NULL);
+	return (cmd);
 }
 
 char	*get_path_and_cmd(char *argv, char **envp)
@@ -57,26 +68,26 @@ char	*get_path_and_cmd(char *argv, char **envp)
 	char	**paths;
 	char	**my_execve_args;
 	char	*cmd;
+	char	**temp;
 
 	paths = possible_paths(envp);
+	temp = paths;
 	my_execve_args = ft_split(argv, ' ');
 	while (*paths)
 	{
 		if (access(my_execve_args[0], X_OK | F_OK) == 0)
 			cmd = my_execve_args[0];
 		else
-		{
-			cmd = ft_strjoin(*paths, my_execve_args[0]);
-			if (!cmd)
-				return (NULL);
-		}
+			cmd = join_and_free(*paths, my_execve_args[0]);
 		if (access(cmd, X_OK | F_OK) == 0)
 			break ;
 		else
 			free(cmd);
 		paths++;
 	}
+	free(temp);
 	if (execve(cmd, my_execve_args, envp) == -1)
 		perror("execve problem");
+	free_2d(my_execve_args);
 	return (cmd);
 }

@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 14:04:41 by druina            #+#    #+#             */
-/*   Updated: 2023/01/20 11:01:37 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/23 13:50:23 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <unistd.h>
 
 int		error(char *msg);
+void	free_2d(char **str);
 int		child(int **pipe_n, int i, char **argv, char **envp);
 int		parent(int **pipe_n, char **argv, int proccesses, char **envp);
 char	*get_path_from_env(char **envp);

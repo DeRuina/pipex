@@ -6,7 +6,7 @@
 #    By: druina <druina@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/12 14:04:44 by druina            #+#    #+#              #
-#    Updated: 2023/01/24 12:26:50 by druina           ###   ########.fr        #
+#    Updated: 2023/01/25 10:42:19 by druina           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ FLAGS = -Wall -Wextra -Werror
 
 HEADER = pipex.h
 
+BONUSHEADER = pipex_bonus.h
 
 .PHONY: all clean fclean re
 
@@ -33,7 +34,7 @@ $(NAME): $(SRC)
 bonus:
 	@cd libft && make
 	@cd libft && mv libft.a ..
-	@cc $(FLAGS) -o $(NAME) $(BONUSSRC) libft.a -I $(HEADER)
+	@cc $(FLAGS) -o $(NAME) $(BONUSSRC) libft.a -I $(BONUSHEADER)
 
 clean:
 	@cd libft && make clean

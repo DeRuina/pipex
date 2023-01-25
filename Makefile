@@ -6,7 +6,7 @@
 #    By: druina <druina@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/12 14:04:44 by druina            #+#    #+#              #
-#    Updated: 2023/01/25 10:42:19 by druina           ###   ########.fr        #
+#    Updated: 2023/01/25 11:25:50 by druina           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,27 +14,31 @@ NAME = pipex
 
 SRC = pipex.c processes.c enviroment.c pipes_and_pid.c
 
+MANPATH = $(addprefix ./mandatory/, $(SRC))
+
 BONUSSRC = pipex_bonus.c processes_bonus.c enviroment_bonus.c pipes_and_pid_bonus.c here_doc_bonus.c
+
+BONUSPATH = $(addprefix ./bonus/, $(BONUSSRC))
 
 FLAGS = -Wall -Wextra -Werror
 
-HEADER = pipex.h
+HEADER = ./mandatory/pipex.h
 
-BONUSHEADER = pipex_bonus.h
+BONUSHEADER = ./bonus/pipex_bonus.h
 
 .PHONY: all clean fclean re
 
 all: $(NAME)
 
-$(NAME): $(SRC)
+$(NAME): $(MANPATH)
 	@cd libft && make
 	@cd libft && mv libft.a ..
-	@cc $(FLAGS) -o $(NAME) $(SRC) libft.a -I $(HEADER)
+	@cc $(FLAGS) -o $(NAME) $(MANPATH) libft.a -I $(HEADER)
 
-bonus:
+bonus: $(NAME)
 	@cd libft && make
 	@cd libft && mv libft.a ..
-	@cc $(FLAGS) -o $(NAME) $(BONUSSRC) libft.a -I $(BONUSHEADER)
+	@cc $(FLAGS) -o $(NAME) $(BONUSPATH) libft.a -I $(BONUSHEADER)
 
 clean:
 	@cd libft && make clean

@@ -6,7 +6,7 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 09:03:21 by druina            #+#    #+#             */
-/*   Updated: 2023/01/24 11:24:00 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/25 10:50:03 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	main(int argc, char **argv, char **envp)
 	int	*pid;
 	int	proccesses;
 
-	if (argc != 5)
+	if (argc < 5)
 		return (ft_printf("wrong amount of arguments try again\n"));
 	pipe_n = allocate_pipes(argc, argv);
 	pid = allocate_pid(argc, pipe_n, argv);

@@ -6,14 +6,14 @@
 /*   By: druina <druina@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 14:04:41 by druina            #+#    #+#             */
-/*   Updated: 2023/01/25 11:19:07 by druina           ###   ########.fr       */
+/*   Updated: 2023/01/25 11:46:31 by druina           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
 
-# include "../libft/libft.h"
+# include "../libft/src/libft.h"
 # include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>

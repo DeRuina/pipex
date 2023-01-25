@@ -6,7 +6,7 @@
 #    By: druina <druina@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/01 15:54:26 by druina            #+#    #+#              #
-#    Updated: 2023/01/25 11:24:24 by druina           ###   ########.fr        #
+#    Updated: 2023/01/25 11:48:47 by druina           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,18 +26,22 @@ print_nbr.c print_p.c print_s.c print_x.c print_c.c ft_printf.c
 
 OBJECT = $(SRC:.c=.o)
 
+SRCPATH = $(addprefix ./src/, $(SRC))
+
+OBJECTPATH = $(addprefix ./src/, $(OBJECT))
+
 FLAGS = -Wall -Wextra -Werror
 
-HEADER = libft.h
+HEADER = ./src/libft.h
 
 all: $(NAME)
 
-$(NAME): $(SRC)
-	@cc $(FLAGS) -c $(SRC) -I $(HEADER)
+$(NAME): $(SRCPATH)
+	@cc $(FLAGS) -c $(SRCPATH) -I $(HEADER)
 	@ar -rcs $(NAME) $(OBJECT)
 
 clean:
-	@rm -f $(OBJECT) $(BONUSOBJ)
+	@rm -f $(OBJECT) 
 	@echo "\033[31mNO DON'T DO IT, NO!!!!\033[39m"
 
 fclean: clean

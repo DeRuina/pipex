@@ -27,7 +27,7 @@ $> cmd1 << LIMITER | cmd2 >> file2
 $> ./pipex here_doc LIMITER cmd1 cmd2 file2
 ```
 
-### Evaluated by moulinette
+### Evaluated by 42 
 
 ![125/100](img/125.png)
 
